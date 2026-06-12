@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ArrowUpIcon } from "@/components/common/Icon";
+import { BrandLogo } from "@/components/shell/BrandLogo";
 
 const FOOD_SERVICE_PROMPTS = [
   "연남동에서 디저트 카페를 열고 싶어요",
@@ -54,6 +55,9 @@ export function LandingScreen({
 
   return (
     <section className="screen active" data-screen="landing">
+      <div className="landing-brand">
+        <BrandLogo />
+      </div>
       <div className="landing-main">
         <h1 className="hero-title">어떤 가게를 준비하나요?</h1>
         <form

@@ -320,6 +320,21 @@
         padding: 0 20px 8vh;
       }
 
+      .landing-brand {
+        position: absolute;
+        top: max(24px, calc(18px + env(safe-area-inset-top)));
+        left: 0;
+        right: 0;
+        z-index: 2;
+        display: flex;
+        justify-content: center;
+        pointer-events: none;
+      }
+
+      .landing-brand .brand-logo {
+        font-size: 24px;
+      }
+
       .hero-title {
         margin: 0;
         color: #15181e;

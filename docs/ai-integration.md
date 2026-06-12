@@ -7,6 +7,9 @@
 `backend/.env.example`을 참고합니다.
 
 ```bash
+cd backend
+cp .env.example .env
+
 LLM_API_KEY=
 LLM_BASE_URL=https://api.openai.com/v1
 LLM_MODEL=gpt-4o-mini
@@ -16,6 +19,7 @@ ENABLE_DEMO_FALLBACK=true
 ```
 
 `OPENAI_API_KEY`도 fallback으로 인식합니다.
+`backend/.env`는 서버 시작 시 자동으로 읽습니다.
 
 ## 연결 지점
 

@@ -40,12 +40,14 @@ app/
 Copy `.env.example` to `.env` or export the variables before running:
 
 ```bash
+cp .env.example .env
 export LLM_API_KEY="..."
 export LLM_MODEL="gpt-4o-mini"
 export LLM_BASE_URL="https://api.openai.com/v1"
 ```
 
 `OPENAI_API_KEY` is also accepted as a fallback for `LLM_API_KEY`.
+`backend/.env` is loaded automatically when the server starts.
 
 If no API key is present, the service continues with deterministic rule fallback for demos.
 

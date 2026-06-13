@@ -10,6 +10,7 @@ import { AnalysisLoadingScreen } from "@/components/views/AnalysisLoadingScreen"
 import { FlowView } from "@/components/views/FlowView";
 import { LandingScreen } from "@/components/views/LandingScreen";
 import { getCase, sendTurn, startCase } from "@/lib/api";
+import type { BuildingLedgerRaw, ResolvedAddress } from "@/lib/address";
 import { createDevEnvelope } from "@/lib/devMocks";
 import { primaryActionState, progressFor } from "@/lib/viewState";
 import type { ApiEnvelope, DocumentItem, FlowActionId, TurnInput, ViewType } from "@/types/flow";
@@ -24,6 +25,8 @@ export function HeogaonFlowApp() {
   const [inputText, setInputText] = useState("");
   const [freeText, setFreeText] = useState("");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [addressResolved, setAddressResolved] = useState<ResolvedAddress | null>(null);
+  const [addressBuilding, setAddressBuilding] = useState<BuildingLedgerRaw | null>(null);
   const [activeDocument, setActiveDocument] = useState<DocumentItem | null>(null);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
@@ -124,6 +127,20 @@ export function HeogaonFlowApp() {
   function resetTransientInputs() {
     setSelectedIds([]);
     setFreeText("");
+    setAddressResolved(null);
+    setAddressBuilding(null);
+  }
+
+  function handleAddressResolved(address: ResolvedAddress, building: BuildingLedgerRaw | null) {
+    setAddressResolved(address);
+    setAddressBuilding(building);
+    setFreeText(address.roadAddress || address.jibunAddress);
+  }
+
+  function handleAddressClear() {
+    setAddressResolved(null);
+    setAddressBuilding(null);
+    setFreeText("");
   }
 
   function resetCase() {
@@ -133,6 +150,8 @@ export function HeogaonFlowApp() {
     setInputText("");
     setSelectedIds([]);
     setFreeText("");
+    setAddressResolved(null);
+    setAddressBuilding(null);
     setActiveDocument(null);
     setHistoryOpen(false);
     setResetConfirmOpen(false);
@@ -169,6 +188,9 @@ export function HeogaonFlowApp() {
         text: freeText,
         value: freeText,
         unknown: selectedIds.includes("unknown"),
+        ...(addressResolved
+          ? { address: addressResolved, ...(addressBuilding ? { building: addressBuilding } : {}) }
+          : {}),
       });
       return;
     }
@@ -220,6 +242,8 @@ export function HeogaonFlowApp() {
                 onDashboardContinue={submitPrimary}
                 onDashboardAction={submitAction}
                 onAction={submitAction}
+                onAddressResolved={handleAddressResolved}
+                onAddressClear={handleAddressClear}
                 dashboardContinueDisabled={!primary || primary.disabled}
               />
             </div>

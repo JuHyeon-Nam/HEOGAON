@@ -943,7 +943,7 @@
       .dev-nav-title-row h3 {
         margin: 0;
         font-size: 14px;
-        font-weight: 840;
+        font-weight: 780;
         color: var(--primary);
         letter-spacing: -0.3px;
       }
@@ -1280,7 +1280,7 @@
 
       .summary-review-title {
         font-size: 16px;
-        font-weight: 860;
+        font-weight: 790;
       }
 
       .building-ledger-summary {
@@ -1435,7 +1435,7 @@
         background: var(--primary-soft);
         color: var(--primary);
         font-size: 11px;
-        font-weight: 880;
+        font-weight: 800;
         line-height: 1;
       }
 

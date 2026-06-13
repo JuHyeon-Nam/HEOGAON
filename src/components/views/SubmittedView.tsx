@@ -1,74 +1,71 @@
 import { Icon } from "@/components/common/Icon";
-import { BrandLogo } from "@/components/shell/BrandLogo";
 import type { SimpleView } from "@/types/flow";
 
 export function SubmittedView({ view }: { view: SimpleView }) {
   const completionRate = view.completionRate ?? 100;
-  const statusCards = view.statusCards?.length ? view.statusCards : [
-    { label: "서류", value: "완료" },
-    { label: "진행률", value: `${completionRate}%` },
-  ];
   const submittedDocuments = view.submittedDocuments?.length ? view.submittedDocuments : [
-    { id: "building-ledger", title: "건축물대장 확인", statusLabel: "완료", meta: "우선순위 1" },
-    { id: "health-check", title: "건강진단결과서", statusLabel: "완료", meta: "우선순위 3" },
-    { id: "hygiene-education", title: "위생교육 수료증", statusLabel: "완료", meta: "우선순위 5" },
+    { id: "business-registration", title: "사업자등록 신청서", statusLabel: "완료", meta: "우선순위 1" },
+    { id: "hygiene-education", title: "위생교육 수료증", statusLabel: "완료", meta: "우선순위 2" },
+    { id: "facility-check", title: "시설 기준 확인 자료", statusLabel: "완료", meta: "우선순위 3" },
+    { id: "business-report", title: "휴게음식점 영업신고", statusLabel: "완료", meta: "우선순위 4" },
   ];
+  const docCount = submittedDocuments.length;
   const nextNotes = view.nextNotes?.length ? view.nextNotes : [
-    "접수번호나 방문 기록은 따로 보관하세요.",
-    "추가 연락이 오면 진행 상황에 기록하세요.",
+    "접수번호와 제출 기록은 따로 보관하세요.",
+    "추가 연락이 오면 답변 내용을 다시 기록하세요.",
   ];
 
   return (
-    <div className="submitted-ending" aria-labelledby="submitted-title">
-      <section className="submitted-ending-hero">
-        <div className="submitted-ending-brand">
-          <BrandLogo />
+    <div className="submitted-a" aria-labelledby="submitted-title">
+      <section className="suba-hero">
+        <span className="suba-seal" aria-hidden="true"><Icon name="check" size={38} /></span>
+        <span className="suba-kicker">제출 완료</span>
+        <h1 className="suba-title" id="submitted-title">{view.title}</h1>
+        <p className="suba-copy">{view.subtitle || "필요한 모든 서류가 정상적으로 접수됐어요. 수고 많으셨어요."}</p>
+      </section>
+
+      <section className="suba-receipt" aria-label="제출 요약">
+        <div className="suba-receipt-cells">
+          <div className="suba-cell">
+            <small>완료 서류</small>
+            <strong>{docCount}<em>건</em></strong>
+          </div>
+          <div className="suba-cell">
+            <small>진행률</small>
+            <strong className="is-primary">{completionRate}<em>%</em></strong>
+          </div>
         </div>
-        <div className="submitted-ending-meter" aria-label={`제출 준비 ${completionRate}% 완료`}>
-          <span>{completionRate}</span>
-          <small>%</small>
-        </div>
-        <h1 className="submitted-ending-title" id="submitted-title">{view.title}</h1>
-        <p className="submitted-ending-copy">{view.subtitle || "준비한 서류가 제출 완료 상태로 정리되었어요."}</p>
-        <div className="submitted-ending-status-grid" aria-label="최종 진행 요약">
-          {statusCards.map((item) => (
-            <span className="submitted-ending-status-card" key={item.label}>
-              <strong>{item.value}</strong>
-              <small>{item.label}</small>
-            </span>
-          ))}
+        <div className="suba-receipt-ok">
+          <span className="suba-ok-check" aria-hidden="true"><Icon name="check" size={12} /></span>
+          모든 서류가 완료 상태예요
         </div>
       </section>
 
-      <section className="submitted-ending-receipt" aria-label="제출한 서류">
-        <div className="submitted-ending-receipt-head">
-          <h2>제출한 서류</h2>
-          <span>100% 완료</span>
-        </div>
-        <ul className="submitted-ending-list">
+      <details className="suba-docs">
+        <summary className="suba-docs-summary">
+          <span className="suba-docs-icon" aria-hidden="true"><Icon name="fileCheck" size={15} /></span>
+          <span className="suba-docs-label">제출한 서류 {docCount}건 보기</span>
+          <span className="suba-docs-chevron" aria-hidden="true" />
+        </summary>
+        <ul className="suba-docs-list">
           {submittedDocuments.map((item) => (
-            <li className="submitted-ending-item" key={item.id}>
-              <span className="submitted-ending-item-icon" aria-hidden="true"><Icon name="fileCheck" /></span>
-              <span className="submitted-ending-item-main">
-                <strong>{item.title}</strong>
-                <small>{item.meta}</small>
-              </span>
-              <span className="submitted-ending-item-status">{item.statusLabel}</span>
+            <li className="suba-doc" key={item.id}>
+              <span className="suba-doc-check" aria-hidden="true"><Icon name="check" size={12} /></span>
+              <span className="suba-doc-name">{item.title}</span>
+              <span className="suba-doc-status">{item.statusLabel}</span>
             </li>
           ))}
         </ul>
-      </section>
+      </details>
 
-      <section className="submitted-ending-note">
-        <div className="submitted-ending-note-head">
-          <span aria-hidden="true"><Icon name="list" /></span>
-          <h2>마지막 확인</h2>
-        </div>
-        <ul>
-          {nextNotes.map((step) => (
-            <li key={step}>{step}</li>
-          ))}
-        </ul>
+      <section className="suba-notes" aria-label="마지막 확인">
+        <h2 className="suba-notes-head">마지막 확인</h2>
+        {nextNotes.map((note) => (
+          <p className="suba-note" key={note}>
+            <span className="suba-note-dot" aria-hidden="true" />
+            <span>{note}</span>
+          </p>
+        ))}
       </section>
     </div>
   );

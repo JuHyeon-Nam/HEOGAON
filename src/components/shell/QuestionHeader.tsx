@@ -34,9 +34,6 @@ export function QuestionHeader({
         </div>
       </div>
       <div className="question-progress">
-        <p className="question-progress-caption">
-          <span className="question-progress-label">{progress.label}</span>
-        </p>
         <div className="question-progress-track">
           {progress.stages.map((stage, index) => (
             <span

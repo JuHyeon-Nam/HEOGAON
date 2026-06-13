@@ -146,7 +146,7 @@
         margin: 0 0 4px;
         color: var(--primary);
         font-size: 12px;
-        font-weight: 820;
+        font-weight: 760;
         line-height: 1.25;
       }
 
@@ -154,7 +154,7 @@
         margin: 0;
         color: var(--text);
         font-size: 24px;
-        font-weight: 840;
+        font-weight: 780;
         line-height: 1.25;
       }
 
@@ -238,7 +238,7 @@
         margin: 0;
         color: var(--text);
         font-size: 18px;
-        font-weight: 840;
+        font-weight: 780;
         line-height: 1.28;
         word-break: keep-all;
       }
@@ -268,7 +268,7 @@
       .history-metric-value {
         color: var(--text);
         font-size: 18px;
-        font-weight: 840;
+        font-weight: 780;
         line-height: 1.2;
       }
 
@@ -365,7 +365,7 @@
         margin: 0;
         color: var(--text);
         font-size: 16px;
-        font-weight: 820;
+        font-weight: 760;
         line-height: 1.35;
       }
 
@@ -461,7 +461,7 @@
       .history-task-title {
         color: var(--text);
         font-size: 16px;
-        font-weight: 820;
+        font-weight: 760;
         line-height: 1.38;
         word-break: keep-all;
       }
@@ -595,7 +595,7 @@
         background: var(--primary);
         color: #ffffff;
         font-size: 16px;
-        font-weight: 820;
+        font-weight: 760;
         line-height: 1.2;
         box-shadow: 0 4px 12px rgba(49, 130, 246, 0.18);
       }
@@ -651,7 +651,7 @@
         margin: 4px 0 0;
         color: var(--text);
         font-size: 22px;
-        font-weight: 840;
+        font-weight: 780;
         line-height: 1.28;
         text-align: center;
       }
@@ -677,7 +677,7 @@
         min-height: 52px;
         border-radius: 15px;
         font-size: 15px;
-        font-weight: 820;
+        font-weight: 760;
         line-height: 1.2;
       }
 

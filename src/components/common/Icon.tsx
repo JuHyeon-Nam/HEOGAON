@@ -75,6 +75,7 @@ export function iconForOption(optionId: string): IconName {
   if (optionId.includes("takeout") || optionId.includes("package") || optionId.includes("pickup")) return "bag";
   if (optionId.includes("alcohol") || optionId.includes("liquor") || optionId.includes("drink")) return "wine";
   if (optionId.includes("yes") || optionId.includes("cook")) return "utensils";
+  if (optionId.includes("unknown")) return "help";
   if (optionId.includes("no") || optionId === "none") return "close";
   if (optionId.includes("signage")) return "signpost";
   if (optionId.includes("outdoor")) return "store";

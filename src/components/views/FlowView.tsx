@@ -16,6 +16,7 @@ export function FlowView({
   freeText,
   activeDocument,
   completedDocumentIds,
+  documents,
   onSelectIds,
   onFreeText,
   onUnknown,
@@ -34,6 +35,7 @@ export function FlowView({
   freeText: string;
   activeDocument: DocumentItem | null;
   completedDocumentIds: string[];
+  documents: DocumentItem[];
   onSelectIds: (ids: string[]) => void;
   onFreeText: (value: string) => void;
   onUnknown: () => void;
@@ -80,7 +82,7 @@ export function FlowView({
   }
 
   if (view.type === "dashboard") {
-    return <DashboardView view={view} onContinue={onDashboardContinue} onAction={onDashboardAction} continueDisabled={dashboardContinueDisabled} />;
+    return <DashboardView view={view} documents={documents} completedDocumentIds={completedDocumentIds} onContinue={onDashboardContinue} onAction={onDashboardAction} continueDisabled={dashboardContinueDisabled} />;
   }
   if (view.type === "submitted") return <SubmittedView view={view} />;
   return null;

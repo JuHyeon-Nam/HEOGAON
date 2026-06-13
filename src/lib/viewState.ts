@@ -28,17 +28,11 @@ export function progressFor(stage: string) {
     { key: "intake", label: "정보 수집" },
     { key: "diagnosis", label: "확인 결과" },
     { key: "documents", label: "서류" },
-    { key: "dashboard", label: "진행 상황" },
+    { key: "dashboard", label: "진행 현황" },
     { key: "submitted", label: "제출 완료" },
   ];
   const order = stages.map((item) => item.key);
-  const labels: Record<string, string> = {
-    intake: "정보 수집",
-    diagnosis: "확인 결과",
-    documents: "서류",
-    dashboard: "진행 상황",
-    submitted: "제출 완료",
-  };
+  const labels: Record<string, string> = Object.fromEntries(stages.map((item) => [item.key, item.label]));
   const index = Math.max(0, order.indexOf(stage));
 
   return {

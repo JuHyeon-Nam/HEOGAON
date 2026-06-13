@@ -9,8 +9,6 @@ import {
 } from "@/lib/address";
 import type { SlotQuestionView as SlotQuestionViewModel } from "@/types/flow";
 
-// 주소 단계 전용 뷰. 검색창/결과는 허가온 UI로 그리고, 카카오는 데이터만 제공한다.
-// 사용자가 결과를 "선택"하므로 오타가 원천 차단되고, 선택 즉시 건축물대장을 직접 조회한다.
 export function AddressSearchView({
   view,
   onResolved,
@@ -22,7 +20,6 @@ export function AddressSearchView({
   onClear: () => void;
   onUnknown: () => void;
 }) {
-  const plannedTotal = view.loop.plannedTotalQuestions || view.loop.maxTotalQuestions;
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<AddressResult[]>([]);
   const [searching, setSearching] = useState(false);
@@ -42,18 +39,20 @@ export function AddressSearchView({
 
   function runSearch(keyword: string) {
     if (debounceRef.current) window.clearTimeout(debounceRef.current);
+
     if (!keyword.trim()) {
       setResults([]);
       setSearched(false);
       return;
     }
+
     debounceRef.current = window.setTimeout(async () => {
       setSearching(true);
       setError("");
       try {
         setResults(await searchAddress(keyword));
       } catch (err) {
-        setError(err instanceof Error ? err.message : "주소 검색에 실패했습니다.");
+        setError(err instanceof Error ? err.message : "주소 검색에 실패했어요.");
         setResults([]);
       } finally {
         setSearching(false);
@@ -86,7 +85,6 @@ export function AddressSearchView({
       buildingParams: result.buildingParams,
     };
 
-    // 번지(본번)가 없는 도로 단위 결과는 건축물대장 조회 불가 → 주소만 확정하고 넘어갈 수 있게 한다.
     if (!result.buildingParams) {
       setNoBuilding(true);
       setConfirmed(true);
@@ -100,8 +98,7 @@ export function AddressSearchView({
       onResolved(address, building);
       setConfirmed(true);
     } catch (err) {
-      // 건축물대장 조회 실패해도 주소는 확정해 진행 가능하게 둔다.
-      setError(err instanceof Error ? err.message : "건축물대장 조회에 실패했습니다.");
+      setError(err instanceof Error ? err.message : "건축물대장 조회에 실패했어요.");
       onResolved(address, null);
       setConfirmed(true);
       setNoBuilding(true);
@@ -114,7 +111,6 @@ export function AddressSearchView({
 
   return (
     <section className="question-card">
-      <span className="question-loop-chip">질문 {view.loop.totalAsked}/{plannedTotal}</span>
       <h1 className="question-title">{view.title}</h1>
       {view.subtitle ? <p className="question-sub">{view.subtitle}</p> : null}
       {view.validationMessage ? <p className="collect-status error-text" role="alert">{view.validationMessage}</p> : null}
@@ -127,7 +123,7 @@ export function AddressSearchView({
             type="text"
             value={query}
             onChange={(event) => onChangeQuery(event.target.value)}
-            placeholder="도로명 또는 지번 주소를 입력하세요"
+            placeholder="도로명 또는 지번 주소를 검색해 주세요"
             autoComplete="off"
             aria-label="주소 검색"
           />
@@ -153,13 +149,13 @@ export function AddressSearchView({
         ) : null}
 
         {showEmpty ? (
-          <p className="address-search-hint">검색 결과가 없어요. 도로명·건물번호까지 입력하면 더 정확해요.</p>
+          <p className="address-search-hint">검색 결과가 없어요. 도로명과 건물번호까지 입력하면 더 정확해요.</p>
         ) : null}
 
         {selected && loadingBuilding ? (
           <div className="address-confirm pending">
             <span className="address-confirm-icon" aria-hidden="true"><Icon name="search" size={16} /></span>
-            <span>건축물대장 정보를 불러오는 중…</span>
+            <span>건축물대장 정보를 불러오는 중이에요.</span>
           </div>
         ) : null}
 
@@ -170,7 +166,7 @@ export function AddressSearchView({
             </span>
             <span className="address-confirm-text">
               <strong>{selected.roadAddress || selected.label}</strong>
-              <em>{noBuilding ? "건물 정보 없이 진행됩니다" : selected.buildingName || "건물 정보 확인됨"}</em>
+              <em>{noBuilding ? "주소는 선택됐고, 건축물 정보는 다음 단계에서 한 번 더 확인해요." : selected.buildingName || "건축물대장 조회 완료"}</em>
             </span>
           </div>
         ) : null}

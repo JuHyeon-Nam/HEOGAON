@@ -11,7 +11,7 @@ export function DashboardView({
   const stats = [
     { label: "서류", value: view.summary.documents },
     { label: "확인 필요", value: `${view.summary.unknownFields}개` },
-    { label: "답변", value: `${view.summary.answeredQuestions}개` },
+    { label: "답변 완료", value: `${view.summary.answeredQuestions}개` },
   ];
   const sections = view.sections?.length ? view.sections : fallbackSections(view);
 

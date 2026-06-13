@@ -306,7 +306,7 @@
       }
 
       .app[data-question-type="documents"] .bottom-bar {
-        z-index: 40;
+        z-index: 55;
       }
 
       .app[data-question-type="documents"] .document-timeline-item,
@@ -1594,7 +1594,7 @@
       }
 
       .document-detail-sheet {
-        border-radius: 22px 22px 0 0;
+        border-radius: var(--radius-md);
         padding: 20px 20px 18px;
       }
 

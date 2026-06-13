@@ -71,6 +71,27 @@ export function DocumentsView({
             </div>
             <span className="document-prep-meter-note">{totalCount - completedCount > 0 ? `${totalCount - completedCount}개 남았어요.` : "서류 준비 완료"}</span>
           </div>
+          {view.durationEstimate ? (
+            <div className="document-duration">
+              <div className="document-duration-head">
+                <span className="document-duration-title">{view.durationEstimate.title}</span>
+                <span className="document-duration-range">{view.durationEstimate.rangeLabel}</span>
+              </div>
+              {view.durationEstimate.summary ? (
+                <p className="document-duration-summary">{view.durationEstimate.summary}</p>
+              ) : null}
+              {view.durationEstimate.basisItems?.length ? (
+                <ul className="document-duration-basis">
+                  {view.durationEstimate.basisItems.map((item) => (
+                    <li className="document-duration-basis-item" key={item}>{item}</li>
+                  ))}
+                </ul>
+              ) : null}
+              {view.durationEstimate.note ? (
+                <p className="document-duration-note">{view.durationEstimate.note}</p>
+              ) : null}
+            </div>
+          ) : null}
           <section className="document-prep-group">
             <div className="document-prep-group-head">
               <h3 className="document-prep-group-title">준비 순서</h3>
@@ -86,15 +107,14 @@ export function DocumentsView({
                   <ol className="document-timeline">
                     {group.documents.map((document) => {
                       const completed = completedDocumentIds.includes(document.id);
-                      const blockingTitles = blockingTitlesFor(document, completedDocumentIds, titleById);
-                      const locked = !completed && blockingTitles.length > 0;
+                      const waiting = !completed && blockingTitlesFor(document, completedDocumentIds, titleById).length > 0;
                       const current = document.id === firstCurrentId;
-                      const stateClass = completed ? " is-done" : current ? " is-current" : locked ? " is-locked" : "";
+                      const stateClass = completed ? " is-done" : current ? " is-current" : waiting ? " is-waiting" : "";
                       return (
                         <li className={`document-timeline-item${stateClass}`} data-document-id={document.id} key={document.id}>
                           <span className="document-timeline-rail" aria-hidden="true">
                             <span className="document-timeline-marker">
-                              {completed ? <Icon name="check" size={14} /> : locked ? <Icon name="lock" size={14} /> : document.priority}
+                              {completed ? <Icon name="check" size={14} /> : document.priority}
                             </span>
                           </span>
                           <button className="document-timeline-body" type="button" onClick={() => onOpenDocument(document)}>
@@ -103,23 +123,17 @@ export function DocumentsView({
                               {current ? <span className="document-timeline-badge">지금 작성</span> : null}
                             </span>
                             <span className="document-timeline-meta">예상 소요 {document.perceivedDuration}</span>
-                            {locked ? (
-                              <span className="document-timeline-lock">{blockingTitles.join(" · ")} 완료 후 작성할 수 있어요</span>
-                            ) : (
-                              <span className="document-timeline-link">자세히 <Icon name="arrowRight" size={14} /></span>
-                            )}
+                            <span className="document-timeline-link">자세히 <Icon name="arrowRight" size={14} /></span>
                           </button>
-                          {!locked ? (
-                            <label className={`document-prep-check${completed ? " is-checked" : ""}`}>
-                              <input
-                                className="document-prep-check-input"
-                                type="checkbox"
-                                checked={completed}
-                                aria-label={`${document.title} 완료 표시`}
-                                onChange={(event) => onToggleDocument(document.id, event.target.checked)}
-                              />
-                            </label>
-                          ) : null}
+                          <label className={`document-prep-check${completed ? " is-checked" : ""}`}>
+                            <input
+                              className="document-prep-check-input"
+                              type="checkbox"
+                              checked={completed}
+                              aria-label={`${document.title} 완료 표시`}
+                              onChange={(event) => onToggleDocument(document.id, event.target.checked)}
+                            />
+                          </label>
                         </li>
                       );
                     })}
@@ -215,8 +229,8 @@ function DocumentDetail({
         </div>
         {blockingTitles.length ? (
           <div className="document-detail-lock">
-            <Icon name="lock" size={16} />
-            <span>{blockingTitles.join(", ")} 완료 후 작성할 수 있어요</span>
+            <Icon name="fileCheck" size={16} />
+            <span>{blockingTitles.join(", ")}을(를) 먼저 준비하면 수월해요</span>
           </div>
         ) : null}
         {document.trackTitle || document.phaseTitle ? (

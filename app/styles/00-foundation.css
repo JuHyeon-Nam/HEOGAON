@@ -8,31 +8,33 @@
       }
 
       :root {
-        --bg: #f6f8fc;
-        --surface: #ffffff;
-        --soft: #f7f9fc;
-        --line: #e2e7f1;
-        --line-light: #edf2f8;
-        --line-soft: #e9edf4;
-        --line-strong: #dce5f0;
-        --text: #101827;
-        --text-secondary: #3d4a5c;
-        --muted: #5d6b7c;
-        --light: #5a6d82;
-        --placeholder: #667085;
-        --icon-muted: #8a97aa;
-        --logo-blue: #0f4f95;
-        --primary: #0f4f95;
-        --primary-dark: #0a3c74;
-        --primary-soft: #edf4ff;
-        --primary-hover: #0d4585;
-        --success: #0d8a5e;
-        --success-soft: #e7f7f0;
-        --warning: #c27a1a;
-        --warning-soft: #fef5e7;
-        --shadow-soft: 0 4px 18px rgba(15, 31, 53, 0.08);
-        --shadow: 0 16px 42px rgba(15, 31, 53, 0.07);
-        --shadow-elevated: 0 20px 48px rgba(15, 31, 53, 0.12);
+        --bg: #F9FAFB;
+        --surface: #FFFFFF;
+        --soft: #F9FAFB;
+        --line: #E5E8EB;
+        --line-light: #F2F4F6;
+        --line-soft: #EEF0F3;
+        --line-strong: #D1D6DB;
+        --text: #191F28;
+        --text-secondary: #4E5968;
+        --muted: #6B7684;
+        --light: #8B95A1;
+        --placeholder: #8B95A1;
+        --icon-muted: #8B95A1;
+        --logo-blue: #3182F6;
+        --primary: #3182F6;
+        --primary-dark: #0B5ED7;
+        --primary-soft: #E8F3FF;
+        --primary-hover: #1B64DA;
+        --success: #00A661;
+        --success-soft: #EAFBF2;
+        --warning: #F59E0B;
+        --warning-soft: #FFF7E6;
+        --danger: #F04452;
+        --danger-soft: #FFF0F3;
+        --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.06);
+        --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        --shadow-elevated: 0 8px 28px rgba(0, 0, 0, 0.12);
         --system-font: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Segoe UI", sans-serif;
         --logo-size: 23px;
         --header-height: 76px;
@@ -54,11 +56,11 @@
         --spacing-md: 12px;
         --spacing-lg: 16px;
         --spacing-xl: 24px;
-        --font-weight-normal: 500;
-        --font-weight-medium: 600;
-        --font-weight-semibold: 700;
-        --font-weight-bold: 780;
-        --font-weight-heavy: 840;
+        --font-weight-normal: 400;
+        --font-weight-medium: 500;
+        --font-weight-semibold: 600;
+        --font-weight-bold: 700;
+        --font-weight-heavy: 800;
       }
 
       * {
@@ -83,13 +85,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background:
-          radial-gradient(circle at 50% 18%, rgba(15, 79, 149, 0.08), transparent 31%),
-          #eef1f6;
-      }
-
-      *:focus {
-        outline: none;
+        background: #F2F4F6;
       }
 
       *:focus-visible {
@@ -298,6 +294,8 @@
         border-radius: 26px;
         box-shadow: 0 20px 50px rgba(15, 31, 53, 0.12);
         transform: translate(-50%, -50%);
+        animation: splashFade 260ms ease 1180ms forwards;
+        pointer-events: none;
       }
 
       .splash .brand-logo {
@@ -305,8 +303,7 @@
       }
 
       .splash.is-hiding {
-        pointer-events: none;
-        animation: splashFade 260ms ease forwards;
+        animation-delay: 0ms;
       }
 
       .landing-main {
@@ -338,8 +335,8 @@
       .hero-title {
         margin: 0;
         color: #15181e;
-        font-size: 31px;
-        font-weight: 780;
+        font-size: 30px;
+        font-weight: 700;
         line-height: 1.24;
         text-align: center;
         word-break: keep-all;
@@ -355,17 +352,17 @@
         align-items: center;
         gap: 8px;
         padding: 10px 10px 10px 16px;
-        border: 1.5px solid #c9d4e3;
+        border: 1px solid var(--line);
         border-radius: 16px;
         background: var(--surface);
-        box-shadow: 0 10px 26px rgba(15, 31, 53, 0.1), 0 0 0 3px rgba(15, 79, 149, 0.035);
+        box-shadow: none;
         transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
       }
 
       .composer:focus-within {
-        border-color: rgba(15, 79, 149, 0.65);
-        background: #fbfdff;
-        box-shadow: 0 14px 30px rgba(15, 79, 149, 0.16), 0 0 0 4px rgba(15, 79, 149, 0.08);
+        border-color: var(--primary);
+        background: #FFFFFF;
+        box-shadow: 0 0 0 3px var(--primary-soft);
       }
 
       .composer-field {
@@ -423,7 +420,7 @@
 
       .send-button:hover:not(:disabled) {
         background: var(--primary-hover);
-        box-shadow: 0 4px 12px rgba(15, 79, 149, 0.25);
+        box-shadow: 0 4px 12px rgba(49, 130, 246, 0.18);
       }
 
       .send-button:active:not(:disabled) {
@@ -434,8 +431,8 @@
       .send-button:disabled {
         cursor: not-allowed;
         opacity: 1;
-        background: #e8f0fa;
-        color: #0f4f95;
+        background: #F2F4F6;
+        color: #B0B8C1;
       }
 
       .analysis-loading-screen {
@@ -465,10 +462,10 @@
         align-items: center;
         justify-content: center;
         gap: 7px;
-        border: 1px solid rgba(15, 79, 149, 0.1);
+        border: 1px solid rgba(49, 130, 246, 0.1);
         border-radius: 22px;
-        background: linear-gradient(180deg, #f9fbff 0%, #edf4ff 100%);
-        box-shadow: 0 16px 34px rgba(15, 79, 149, 0.12);
+        background: linear-gradient(180deg, #F9FAFB 0%, var(--primary-soft) 100%);
+        box-shadow: var(--shadow);
       }
 
       .analysis-loading-mark span {
@@ -521,7 +518,7 @@
         inset: 0 auto 0 0;
         width: 42%;
         border-radius: inherit;
-        background: linear-gradient(90deg, rgba(15, 79, 149, 0), #0f4f95 50%, rgba(15, 79, 149, 0));
+        background: linear-gradient(90deg, rgba(49, 130, 246, 0), var(--primary) 50%, rgba(49, 130, 246, 0));
         animation: loadingSweep 1.35s var(--ease-smooth) infinite;
       }
 
@@ -588,12 +585,12 @@
       }
 
       .question-progress-segment.is-complete {
-        background: linear-gradient(90deg, #0f4f95 0%, #1f6fc5 100%);
+        background: linear-gradient(90deg, var(--primary) 0%, #1B64DA 100%);
       }
 
       .question-progress-segment.is-current {
-        background: linear-gradient(90deg, #0f4f95 0%, #2c7ed6 100%);
-        box-shadow: 0 0 0 3px rgba(15, 79, 149, 0.1);
+        background: linear-gradient(90deg, var(--primary) 0%, #4593FC 100%);
+        box-shadow: 0 0 0 3px rgba(49, 130, 246, 0.1);
       }
 
       .question-progress-caption {
@@ -695,7 +692,7 @@
         margin-bottom: 12px;
         padding: 0 10px;
         border-radius: var(--radius-full);
-        background: #eef5ff;
+        background: var(--primary-soft);
         color: var(--primary);
         font-size: 12px;
         font-weight: 820;
@@ -706,8 +703,8 @@
       .question-title {
         margin: 0;
         color: var(--text);
-        font-size: 32px;
-        font-weight: 780;
+        font-size: 26px;
+        font-weight: 700;
         line-height: 1.2;
         word-break: keep-all;
         overflow-wrap: anywhere;
@@ -738,7 +735,7 @@
         min-height: 150px;
         margin-top: 18px;
         padding: 16px;
-        border: 1.5px solid var(--line);
+        border: 1px solid var(--line);
         border-radius: var(--radius-lg);
         background: #ffffff;
         color: var(--text);
@@ -758,7 +755,8 @@
 
       .question-textarea:focus {
         border-color: var(--primary);
-        box-shadow: inset 0 0 0 1.5px var(--primary);
+        background: #FFFFFF;
+        box-shadow: 0 0 0 3px var(--primary-soft);
       }
 
       .options[hidden],
@@ -782,7 +780,7 @@
         padding: 12px 14px;
         border-radius: var(--radius-lg);
         background: #ffffff;
-        border: 1.5px solid var(--line);
+        border: 1px solid var(--line);
         color: var(--text);
         text-align: left;
         transition: background var(--duration-fast) var(--ease-smooth),
@@ -791,19 +789,19 @@
       }
 
       .option:hover {
-        border-color: rgba(15, 79, 149, 0.35);
-        background: #fafcff;
-        box-shadow: 0 2px 8px rgba(15, 79, 149, 0.08);
+        border-color: rgba(49, 130, 246, 0.35);
+        background: #F9FAFB;
+        box-shadow: none;
       }
 
       .option:active {
-        background: #f7faff;
+        background: #F9FAFB;
       }
 
       .option.selected {
         background: var(--primary-soft);
         border-color: var(--primary);
-        box-shadow: inset 0 0 0 1.5px var(--primary), 0 2px 8px rgba(15, 79, 149, 0.1);
+        box-shadow: none;
       }
 
       .option-icon {

@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import { devViewLabels } from "@/lib/devMocks";
 import type { ViewType } from "@/types/flow";
 
@@ -13,40 +10,32 @@ export function DevPanel({
   onLanding: () => void;
   onPreview: (type: ViewType) => void;
 }) {
-  const [open, setOpen] = useState(false);
-
   return (
-    <aside className={`dev-panel${open ? " is-open" : ""}`} aria-label="로컬 개발 패널">
-      <button className="dev-panel-toggle" type="button" onClick={() => setOpen((value) => !value)}>
-        Dev
-      </button>
-      {open ? (
+    <aside className="dev-panel" aria-label="로컬 개발 패널">
+      <details className="dev-panel-details">
+        <summary className="dev-panel-toggle">Dev</summary>
         <div className="dev-panel-body">
           <div className="dev-panel-head">
             <strong>Local preview</strong>
             <span>{currentView}</span>
           </div>
           <div className="dev-panel-grid">
-            <button
-              className={`dev-panel-action${currentView === "landing" ? " is-active" : ""}`}
-              type="button"
-              onClick={onLanding}
-            >
+            <a className={`dev-panel-action${currentView === "landing" ? " is-active" : ""}`} href="/?dev=landing" onClick={onLanding}>
               랜딩
-            </button>
+            </a>
             {devViewLabels.map((item) => (
-              <button
+              <a
                 className={`dev-panel-action${currentView === item.type ? " is-active" : ""}`}
-                type="button"
+                href={`/?dev=${item.type}`}
                 key={item.type}
                 onClick={() => onPreview(item.type)}
               >
                 {item.label}
-              </button>
+              </a>
             ))}
           </div>
         </div>
-      ) : null}
+      </details>
     </aside>
   );
 }

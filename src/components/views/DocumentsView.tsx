@@ -17,9 +17,17 @@ export function DocumentsView({
   onOpenDocument: (document: DocumentItem) => void;
   onCloseDocument: () => void;
 }) {
+  const sortedDocuments = [...view.documents].sort((a, b) => a.priority - b.priority);
+  const titleById = new Map(view.documents.map((document) => [document.id, document.title]));
   const completedCount = completedDocumentIds.length;
   const totalCount = view.documents.length;
   const completionRate = totalCount ? Math.round((completedCount / totalCount) * 100) : 0;
+  const firstCurrentId = sortedDocuments.find((document) => {
+    const completed = completedDocumentIds.includes(document.id);
+    const locked = !completed && blockingTitlesFor(document, completedDocumentIds, titleById).length > 0;
+    return !completed && !locked;
+  })?.id;
+  const activeBlockingTitles = activeDocument ? blockingTitlesFor(activeDocument, completedDocumentIds, titleById) : [];
 
   return (
     <>
@@ -43,57 +51,80 @@ export function DocumentsView({
               <h3 className="document-prep-group-title">준비 순서</h3>
               <span className="document-prep-group-count">{view.documents.length}개</span>
             </div>
-            <ul className="document-prep-list">
-              {view.documents.map((document) => {
-                const checked = completedDocumentIds.includes(document.id);
-                const metaLine = [
-                  document.issuer ? `발급처 ${document.issuer}` : null,
-                  document.submitTo ? `제출처 ${document.submitTo}` : null,
-                ].filter(Boolean).join(" · ");
-                const prerequisitePreview = document.blockingPrerequisites?.slice(0, 3).join(", ");
+            <ol className="document-timeline">
+              {sortedDocuments.map((document) => {
+                const completed = completedDocumentIds.includes(document.id);
+                const blockingTitles = blockingTitlesFor(document, completedDocumentIds, titleById);
+                const locked = !completed && blockingTitles.length > 0;
+                const current = document.id === firstCurrentId;
+                const stateClass = completed ? " is-done" : current ? " is-current" : locked ? " is-locked" : "";
                 return (
-                  <li
-                    className={`document-prep-item${checked ? " is-complete" : ""}`}
-                    key={document.id}
-                    onClick={(event) => {
-                      if ((event.target as HTMLElement).closest("label,input")) return;
-                      onOpenDocument(document);
-                    }}
-                  >
-                    <label className={`document-prep-check${checked ? " is-checked" : ""}`}>
-                      <input
-                        className="document-prep-check-input"
-                        type="checkbox"
-                        checked={checked}
-                        aria-label={`${document.title} 완료`}
-                        onChange={(event) => onToggleDocument(document.id, event.target.checked)}
-                      />
-                    </label>
-                    <button className="document-prep-main" type="button" onClick={() => onOpenDocument(document)}>
-                      <span className="document-prep-title-row">
-                        <span className="document-prep-title-main">
-                          <span className="document-prep-rank">{document.priority}</span>
-                          <span className="document-prep-title">{document.title}</span>
-                        </span>
-                        <span className="document-prep-link">자세히 <Icon name="arrowRight" size={14} /></span>
+                  <li className={`document-timeline-item${stateClass}`} key={document.id}>
+                    <span className="document-timeline-rail" aria-hidden="true">
+                      <span className="document-timeline-marker">
+                        {completed ? <Icon name="check" size={14} /> : locked ? <Icon name="lock" size={14} /> : document.priority}
                       </span>
-                      <span className="document-prep-text">예상 소요 {document.perceivedDuration}</span>
-                      {metaLine ? <span className="document-prep-meta">{metaLine}</span> : null}
-                      {prerequisitePreview ? <span className="document-prep-meta">먼저 필요: {prerequisitePreview}</span> : null}
+                    </span>
+                    <button className="document-timeline-body" type="button" onClick={() => onOpenDocument(document)}>
+                      <span className="document-timeline-head">
+                        <span className="document-timeline-title">{document.title}</span>
+                        {current ? <span className="document-timeline-badge">지금 작성</span> : null}
+                      </span>
+                      <span className="document-timeline-meta">예상 소요 {document.perceivedDuration}</span>
+                      {locked ? (
+                        <span className="document-timeline-lock">{blockingTitles.join(" · ")} 완료 후 작성할 수 있어요</span>
+                      ) : (
+                        <span className="document-timeline-link">자세히 <Icon name="arrowRight" size={14} /></span>
+                      )}
                     </button>
+                    {!locked && !completed ? (
+                      <label className="document-prep-check">
+                        <input
+                          className="document-prep-check-input"
+                          type="checkbox"
+                          checked={false}
+                          aria-label={`${document.title} 완료`}
+                          onChange={(event) => onToggleDocument(document.id, event.target.checked)}
+                        />
+                      </label>
+                    ) : null}
                   </li>
                 );
               })}
-            </ul>
+            </ol>
           </section>
         </section>
       </div>
-      {activeDocument ? <DocumentDetail document={activeDocument} onClose={onCloseDocument} /> : null}
+      {activeDocument ? (
+        <DocumentDetail
+          document={activeDocument}
+          blockingTitles={activeBlockingTitles}
+          onClose={onCloseDocument}
+        />
+      ) : null}
     </>
   );
 }
 
-function DocumentDetail({ document, onClose }: { document: DocumentItem; onClose: () => void }) {
+function blockingTitlesFor(
+  document: DocumentItem,
+  completedDocumentIds: string[],
+  titleById: Map<string, string>,
+) {
+  return (document.dependsOn ?? [])
+    .filter((id) => !completedDocumentIds.includes(id))
+    .map((id) => titleById.get(id) || id);
+}
+
+function DocumentDetail({
+  document,
+  blockingTitles,
+  onClose,
+}: {
+  document: DocumentItem;
+  blockingTitles: string[];
+  onClose: () => void;
+}) {
   const blockers = document.blockingPrerequisites ?? [];
 
   return (
@@ -107,6 +138,12 @@ function DocumentDetail({ document, onClose }: { document: DocumentItem; onClose
           </div>
           <button className="document-detail-close" type="button" aria-label="닫기" onClick={onClose}>×</button>
         </div>
+        {blockingTitles.length ? (
+          <div className="document-detail-lock">
+            <Icon name="lock" size={16} />
+            <span>{blockingTitles.join(", ")} 완료 후 작성할 수 있어요</span>
+          </div>
+        ) : null}
         <ul className="document-detail-steps" aria-label={`${document.title} 확인 순서`}>
           {document.steps.map((step, index) => (
             <li className="document-detail-step" key={step}>
@@ -156,7 +193,7 @@ function DocumentDetail({ document, onClose }: { document: DocumentItem; onClose
             <span className="document-detail-site-main">
               <span className="document-detail-site-kicker">공식 사이트</span>
               <span className="document-detail-site-title">{document.officialLinks[0]?.label || "정부24"}</span>
-              <span className="document-detail-site-meta">문의 전 준비: {document.canPrepareBeforeInquiry ? "가능" : "확인 필요"}</span>
+              <span className="document-detail-site-meta">서류 준비 {document.canPrepareBeforeInquiry ? "가능" : "확인 필요"}</span>
               <span className="document-detail-link">열기 <Icon name="arrowRight" size={16} /></span>
             </span>
           </a>

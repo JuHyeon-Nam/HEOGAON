@@ -1,4 +1,4 @@
-import type { ApiEnvelope, ApiView, DocumentItem, InquiryTask, ViewType } from "@/types/flow";
+import type { ApiEnvelope, ApiView, DocumentItem, ViewType } from "@/types/flow";
 
 const now = "2026-06-13T00:00:00.000Z";
 
@@ -12,11 +12,12 @@ const documents: DocumentItem[] = [
     statutoryDeadline: "영업 시작 전",
     perceivedDuration: "약 1일",
     prerequisites: "대표자 신분증과 임대차계약서가 필요합니다.",
-    unlocks: "사업자등록증 발급 뒤 위생 신고와 카드 가맹 신청을 이어갈 수 있습니다.",
+    unlocks: "사업자등록증 발급 후 위생교육과 카드 가맹 신청으로 이어갈 수 있습니다.",
     officialLinks: [{ label: "홈택스", url: "https://www.hometax.go.kr" }],
     prepareInfo: ["대표자 이름", "사업장 주소", "업종", "임대차계약서"],
     steps: ["신청 정보 확인", "온라인 또는 세무서 제출", "사업자등록증 수령"],
     canPrepareBeforeInquiry: true,
+    dependsOn: [],
   },
   {
     id: "hygiene-education",
@@ -27,11 +28,12 @@ const documents: DocumentItem[] = [
     statutoryDeadline: "영업 신고 전",
     perceivedDuration: "약 3시간",
     prerequisites: "대표자 또는 영업자가 교육을 수강해야 합니다.",
-    unlocks: "수료 뒤 영업 신고 서류에 첨부할 수 있습니다.",
+    unlocks: "수료 후 영업 신고 서류에 첨부할 수 있습니다.",
     officialLinks: [{ label: "한국외식업중앙회", url: "https://www.foodservice.or.kr" }],
     prepareInfo: ["대표자 정보", "업종", "교육 수료 확인"],
     steps: ["교육 기관 선택", "온라인 교육 수강", "수료증 저장"],
     canPrepareBeforeInquiry: true,
+    dependsOn: [],
   },
   {
     id: "facility-check",
@@ -42,29 +44,33 @@ const documents: DocumentItem[] = [
     statutoryDeadline: "영업 신고 전",
     perceivedDuration: "약 1~2일",
     prerequisites: "매장 도면과 설비 사진을 준비하면 좋습니다.",
-    unlocks: "구청 문의와 현장 확인을 빠르게 진행할 수 있습니다.",
+    unlocks: "구청 확인과 현장 점검을 빠르게 진행할 수 있습니다.",
     officialLinks: [{ label: "정부24", url: "https://www.gov.kr" }],
     prepareInfo: ["매장 도면", "주방 사진", "급수/배수 설비", "환기 설비"],
-    steps: ["매장 자료 모으기", "기준표와 대조", "부족한 설비 확인"],
+    steps: ["매장 자료 모으기", "기준표 대조", "부족한 설비 확인"],
     canPrepareBeforeInquiry: false,
+    dependsOn: ["business-registration"],
+    blockingPrerequisites: ["사업자등록 신청서"],
+  },
+  {
+    id: "business-report",
+    title: "휴게음식점 영업신고",
+    priority: 4,
+    reason: "사업자등록과 위생교육, 시설 기준이 준비되면 구청에 영업신고를 진행합니다.",
+    status: "not_started",
+    statutoryDeadline: "영업 시작 전",
+    perceivedDuration: "약 1~2일",
+    prerequisites: "사업자등록증, 위생교육 수료증, 시설 기준 확인 자료가 필요합니다.",
+    unlocks: "영업신고증을 받으면 정식으로 영업을 시작할 수 있습니다.",
+    officialLinks: [{ label: "정부24", url: "https://www.gov.kr" }],
+    prepareInfo: ["사업자등록증", "위생교육 수료증", "시설 기준 확인 자료", "임대차계약서"],
+    steps: ["선행 서류 준비 확인", "구청 위생과 영업신고 접수", "영업신고증 수령"],
+    canPrepareBeforeInquiry: false,
+    dependsOn: ["hygiene-education", "facility-check"],
+    blockingPrerequisites: ["위생교육 수료증", "시설 기준 확인 자료"],
+    dependencyNote: "선행 서류가 모두 준비되면 영업신고를 진행할 수 있어요.",
   },
 ];
-
-const inquiryTask: InquiryTask = {
-  id: "district-office-check",
-  title: "구청 위생과 시설 기준 확인",
-  department: "마포구청 위생과",
-  phone: "tel:02-3153-0000",
-  onlineUrl: "https://www.mapo.go.kr",
-  visitHint: "마포구청 민원실에서 휴게음식점 영업 신고 담당 창구를 찾으면 됩니다.",
-  reason: "디저트 카페 시설 기준과 간판 설치 가능 여부를 확인해야 합니다.",
-  status: "pending",
-  questions: [
-    "연남동 1층 12평 매장에서 디저트 카페 영업 신고가 가능한가요?",
-    "객석이 있는 경우 추가로 필요한 시설 기준이 있나요?",
-    "간판 설치 전에 확인해야 할 허가나 신고가 있나요?",
-  ],
-};
 
 const views: Record<ViewType, ApiView> = {
   slot_question: {
@@ -91,12 +97,12 @@ const views: Record<ViewType, ApiView> = {
   diagnosis: {
     type: "diagnosis",
     title: "카페 영업 신고가 필요해 보여요",
-    headline: "입력한 내용을 기준으로 먼저 준비할 허가와 확인 항목을 정리했어요.",
+    headline: "입력한 내용을 기준으로 먼저 준비할 수 있는 확인 항목을 정리했어요.",
     candidatePermits: [
       {
         name: "휴게음식점 영업 신고",
         status: "candidate",
-        reason: "커피와 디저트를 매장에서 판매하는 경우에 주로 필요합니다.",
+        reason: "커피와 디저트를 매장에서 판매하는 경우 주로 필요합니다.",
       },
     ],
     decisionBlocks: [
@@ -107,7 +113,7 @@ const views: Record<ViewType, ApiView> = {
       },
       {
         type: "needs_department_check",
-        title: "구청 확인이 필요해요",
+        title: "추가 확인이 필요해요",
         items: ["매장 시설 기준", "간판 설치 가능 여부"],
       },
     ],
@@ -119,14 +125,14 @@ const views: Record<ViewType, ApiView> = {
     subtitle: "맞으면 서류 준비 순서로 넘어가고, 다르면 지금 수정할 수 있어요.",
     items: [
       { label: "업종/판매품목", value: "디저트 카페" },
-      { label: "정확한 주소", value: "서울특별시 마포구 포은로 63, 1층 101호" },
+      { label: "정확한 주소", value: "서울특별시 마포구 사직로 63, 1층 101호" },
       { label: "주류 판매 여부", value: "아니요" },
-      { label: "간판·외부공간·가스 등 추가 조건", value: "간판/옥외광고물 + 외부 테이블/보도 사용" },
+      { label: "추가 조건", value: "간판/옥외광고물과 야외 테이블 사용 예정" },
     ],
-    apiItems: ["건축물대장: 확인됨", "용도/업종 판정: 확인됨", "동일 장소 이력: 보류"],
-    buildingItems: ["주용도: 제2종근린생활시설", "대장상 면적: 49.5㎡"],
+    apiItems: ["건축물대장 확인됨", "용도/업종 적정: 확인됨", "동일 업소 이력: 보류"],
+    buildingItems: ["주용도: 근린생활시설", "대상 면적: 49.5㎡"],
     suitabilityTitle: "진행 가능성이 높아요",
-    suitabilitySummary: "건축물대장과 업종 판정 결과를 기준으로 진행 가능성이 높게 나왔어요.",
+    suitabilitySummary: "건축물대장과 업종 적정 결과를 기준으로 진행 가능성이 높게 파악됐어요.",
     nextButtonLabel: "맞아요, 계속",
     editButtonLabel: "수정할래요",
   },
@@ -135,61 +141,32 @@ const views: Record<ViewType, ApiView> = {
     title: "먼저 준비할 서류예요",
     documents,
     completedDocumentIds: ["business-registration"],
-    nextButtonLabel: "문의 이어가기",
-  },
-  inquiry: {
-    type: "inquiry",
-    title: "구청에 확인할 일이 있어요",
-    mode: "channels",
-    task: inquiryTask,
-    channels: [
-      { id: "phone", title: "전화", description: "바로 물어볼 내용을 확인해요." },
-      { id: "online", title: "온라인", description: "복사해서 보낼 문안을 만들어요." },
-      { id: "visit", title: "방문", description: "창구와 준비물을 확인해요." },
-    ],
-    onlineDraft: {
-      subject: "휴게음식점 영업 신고 가능 여부 문의",
-      body: "안녕하세요. 연남동에서 디저트 카페를 준비 중입니다. 해당 주소에서 휴게음식점 영업 신고가 가능한지와 필요한 시설 기준을 확인하고 싶습니다.",
-    },
-    nextButtonLabel: "답변 저장하기",
-  },
-  answer_review: {
-    type: "answer_review",
-    title: "답변을 정리했어요",
-    analysis: {
-      answerSummary: "구청 답변 기준으로 시설 기준은 충족 가능하지만 간판은 별도 확인이 필요해요.",
-      resolvedItems: ["영업장 면적 기준 확인", "위생교육 필요 여부 확인"],
-      newMissingFields: ["간판 설치 위치", "외부 돌출 여부"],
-      newInquiryTasks: [inquiryTask],
-      nextAction: "서류 준비로 돌아가기",
-    },
-    nextButtonLabel: "대시보드로",
+    nextButtonLabel: "진행 상황 보기",
   },
   dashboard: {
     type: "dashboard",
     title: "남은 일을 한눈에 볼게요",
     summary: {
-      documents: "1/3",
-      openInquiryTasks: 1,
+      documents: "1/4",
       answeredQuestions: 3,
       unknownFields: 1,
     },
     sections: [
       {
         id: "updated",
-        title: "업데이트된 일",
-        subtitle: "문의 답변을 반영했어요.",
+        title: "업데이트됐어요",
+        subtitle: "서류 의존성을 반영했어요.",
         icon: "refresh",
         badge: "새로고침",
         items: [
           {
             id: "facility",
-            title: "시설 기준 확인",
-            description: "면적 기준은 가능하지만 간판은 추가 확인이 필요해요.",
+            title: "시설 기준 확인 자료",
+            description: "사업자등록 신청서 완료 후 작성할 수 있어요.",
             statusLabel: "업데이트",
             tone: "updated",
             meta: "방금 반영",
-            actionId: "inquiry",
+            actionId: "documents",
           },
         ],
       },
@@ -200,8 +177,8 @@ const views: Record<ViewType, ApiView> = {
         items: [
           {
             id: "docs",
-            title: "서류 2개 더 체크",
-            description: "위생교육 수료증과 시설 기준 확인 자료가 남았어요.",
+            title: "서류 3개 더 체크",
+            description: "위생교육 수료증, 시설 기준 확인 자료, 영업신고가 남아 있어요.",
             statusLabel: "대기",
             tone: "pending",
             actionId: "documents",
@@ -209,17 +186,16 @@ const views: Record<ViewType, ApiView> = {
         ],
       },
     ],
-    nextActions: ["남은 서류를 마저 체크하세요."],
+    nextActions: ["남은 서류를 순서대로 체크하세요."],
     nextButtonLabel: "서류 보러가기",
   },
   submitted: {
     type: "submitted",
     title: "서류 제출이 끝났어요",
-    subtitle: "준비한 서류와 문의 답변이 제출 완료 상태로 정리됐어요.",
+    subtitle: "준비한 서류가 제출 완료 상태로 정리되었어요.",
     completionRate: 100,
     statusCards: [
       { label: "서류", value: "완료" },
-      { label: "문의", value: "완료" },
       { label: "진행률", value: "100%" },
     ],
     submittedDocuments: documents.map((document) => ({
@@ -228,7 +204,7 @@ const views: Record<ViewType, ApiView> = {
       statusLabel: "완료",
       meta: `우선순위 ${document.priority}`,
     })),
-    nextNotes: ["접수번호와 제출 기록을 따로 보관하세요.", "추가 연락이 오면 답변 내용을 다시 기록하세요."],
+    nextNotes: ["접수번호와 제출 기록은 따로 보관하세요.", "추가 연락이 오면 답변 내용을 다시 기록하세요."],
     nextButtonLabel: "처음으로",
   },
 };
@@ -238,8 +214,6 @@ const progressStageByView: Record<ViewType, string> = {
   diagnosis: "diagnosis",
   understanding_review: "diagnosis",
   documents: "documents",
-  inquiry: "inquiry",
-  answer_review: "inquiry",
   dashboard: "dashboard",
   submitted: "submitted",
 };
@@ -249,8 +223,6 @@ export const devViewLabels: Array<{ type: ViewType; label: string }> = [
   { type: "diagnosis", label: "진단" },
   { type: "understanding_review", label: "확인" },
   { type: "documents", label: "서류" },
-  { type: "inquiry", label: "문의" },
-  { type: "answer_review", label: "답변" },
   { type: "dashboard", label: "대시보드" },
   { type: "submitted", label: "완료" },
 ];
@@ -287,7 +259,6 @@ export function createDevEnvelope(type: ViewType): ApiEnvelope {
         },
       ],
       documents,
-      inquiryTasks: [inquiryTask],
       completedDocumentIds: type === "documents" ? ["business-registration"] : documents.map((document) => document.id),
       questionLoop: {
         status: "active",

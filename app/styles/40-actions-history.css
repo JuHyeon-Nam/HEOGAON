@@ -23,25 +23,25 @@
         align-items: center;
         justify-content: center;
         gap: 8px;
-        border-radius: var(--radius-md);
+        border-radius: 14px;
         background: var(--primary);
         color: #ffffff;
         font-size: 17px;
         font-weight: var(--font-weight-bold);
-        box-shadow: 0 10px 20px rgba(15, 79, 149, 0.2);
+        box-shadow: 0 4px 12px rgba(49, 130, 246, 0.18);
         transition: background var(--duration-fast) var(--ease-smooth),
                     opacity var(--duration-fast) var(--ease-smooth),
                     box-shadow var(--duration-normal) var(--ease-smooth);
       }
 
       .primary-button:hover:not(:disabled) {
-        background: var(--primary-hover);
-        box-shadow: 0 12px 24px rgba(15, 79, 149, 0.28);
+        background: #1B64DA;
+        box-shadow: 0 4px 12px rgba(49, 130, 246, 0.18);
       }
 
       .primary-button:active:not(:disabled) {
         background: var(--primary-dark);
-        box-shadow: 0 4px 10px rgba(15, 79, 149, 0.15);
+        box-shadow: none;
       }
 
       .primary-button:disabled {
@@ -212,7 +212,7 @@
         border-radius: 15px;
         background: var(--primary);
         color: #ffffff;
-        box-shadow: 0 10px 20px rgba(15, 79, 149, 0.22);
+        box-shadow: 0 4px 12px rgba(49, 130, 246, 0.18);
       }
 
       .history-current-icon svg {
@@ -245,7 +245,7 @@
 
       .history-metrics {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 8px;
       }
 
@@ -257,7 +257,7 @@
         justify-items: start;
         border-radius: 14px;
         background: rgba(255, 255, 255, 0.82);
-        border: 1px solid rgba(15, 79, 149, 0.08);
+        border: 1px solid rgba(49, 130, 246, 0.08);
         padding: 10px 11px;
       }
 
@@ -310,7 +310,7 @@
 
       .history-stage.is-done:not(:last-child)::after,
       .history-stage.is-current:not(:last-child)::after {
-        background: rgba(15, 79, 149, 0.34);
+        background: rgba(49, 130, 246, 0.34);
       }
 
       .history-stage-dot {
@@ -330,7 +330,7 @@
       }
 
       .history-stage.is-current .history-stage-dot {
-        box-shadow: 0 0 0 5px rgba(15, 79, 149, 0.12);
+        box-shadow: 0 0 0 5px rgba(49, 130, 246, 0.12);
       }
 
       .history-stage-label {
@@ -405,7 +405,7 @@
       }
 
       .history-task-button:active {
-        background: #f8fbff;
+        background: #F9FAFB;
       }
 
       .history-task-item--new {
@@ -435,7 +435,7 @@
         width: 28px;
         height: 28px;
         border-radius: 999px;
-        background: #edf5ff;
+        background: var(--primary-soft);
         color: var(--primary);
         display: inline-flex;
         align-items: center;
@@ -491,7 +491,7 @@
 
       .history-task-item--new .history-task-status {
         border-radius: 999px;
-        background: #eaf4ff;
+        background: var(--primary-soft);
         padding: 4px 8px;
       }
 
@@ -570,7 +570,7 @@
       }
 
       .history-item:active {
-        background: #f8fbff;
+        background: #F9FAFB;
       }
 
       .history-return-bar {
@@ -597,7 +597,7 @@
         font-size: 16px;
         font-weight: 820;
         line-height: 1.2;
-        box-shadow: 0 10px 22px rgba(15, 79, 149, 0.2);
+        box-shadow: 0 4px 12px rgba(49, 130, 246, 0.18);
       }
 
       .history-return-button:active {
@@ -690,7 +690,7 @@
       .reset-confirm-danger {
         background: var(--primary);
         color: #ffffff;
-        box-shadow: 0 10px 22px rgba(15, 79, 149, 0.2);
+        box-shadow: 0 4px 12px rgba(49, 130, 246, 0.18);
       }
 
       .reset-confirm-secondary:active,

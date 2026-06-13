@@ -10,6 +10,9 @@
 }
 
 .dev-panel-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-width: 54px;
   min-height: 38px;
   padding: 0 13px;
@@ -19,6 +22,12 @@
   box-shadow: 0 10px 26px rgba(16, 24, 39, 0.22);
   font-size: 13px;
   font-weight: 800;
+  list-style: none;
+  user-select: none;
+}
+
+.dev-panel-toggle::-webkit-details-marker {
+  display: none;
 }
 
 .dev-panel-body {
@@ -62,6 +71,9 @@
 }
 
 .dev-panel-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-height: 36px;
   padding: 0 8px;
   border: 1px solid #d8e1ee;
@@ -70,10 +82,12 @@
   color: #253246;
   font-size: 12px;
   font-weight: 780;
+  text-align: center;
+  text-decoration: none;
 }
 
 .dev-panel-action:hover {
-  border-color: rgba(15, 79, 149, 0.42);
+  border-color: rgba(49, 130, 246, 0.42);
   background: #f7fbff;
   color: var(--primary);
 }

@@ -3,8 +3,6 @@ export type ViewType =
   | "diagnosis"
   | "understanding_review"
   | "documents"
-  | "inquiry"
-  | "answer_review"
   | "dashboard"
   | "submitted";
 
@@ -22,7 +20,6 @@ export interface ApiEnvelope {
     slots: Record<string, SlotRecord>;
     answers: AnswerLog[];
     documents: DocumentItem[];
-    inquiryTasks: InquiryTask[];
     completedDocumentIds: string[];
     questionLoop: QuestionLoop;
     flowState: Record<string, unknown>;
@@ -40,8 +37,6 @@ export type ApiView =
   | DiagnosisView
   | UnderstandingReviewView
   | DocumentsView
-  | InquiryView
-  | AnswerReviewView
   | DashboardView
   | SimpleView;
 
@@ -166,41 +161,7 @@ export interface DocumentItem {
   blockingPrerequisites?: string[];
   dependencyNote?: string;
   graphPrerequisites?: string;
-}
-
-export interface InquiryView {
-  type: "inquiry";
-  title: string;
-  mode: "channels" | "phone" | "online" | "visit";
-  task?: InquiryTask;
-  channels: Array<{ id: "phone" | "online" | "visit"; title: string; description: string }>;
-  onlineDraft: { subject: string; body: string };
-  nextButtonLabel: string;
-}
-
-export interface InquiryTask {
-  id: string;
-  title: string;
-  department: string;
-  phone: string;
-  onlineUrl: string;
-  visitHint: string;
-  reason: string;
-  status: "pending" | "resolved" | string;
-  questions: string[];
-}
-
-export interface AnswerReviewView {
-  type: "answer_review";
-  title: string;
-  analysis: {
-    answerSummary?: string;
-    resolvedItems?: string[];
-    newMissingFields?: string[];
-    newInquiryTasks?: InquiryTask[];
-    nextAction?: string;
-  };
-  nextButtonLabel: string;
+  dependsOn?: string[];
 }
 
 export interface DashboardView {
@@ -208,7 +169,6 @@ export interface DashboardView {
   title: string;
   summary: {
     documents: string;
-    openInquiryTasks: number;
     answeredQuestions: number;
     unknownFields: number;
   };
@@ -271,15 +231,12 @@ export type TurnInput =
   | { type: "natural_language"; text: string }
   | { type: "slot_answer"; fieldKey: string; optionIds: string[]; text?: string; value?: string; unknown?: boolean }
   | { type: "action"; actionId: FlowActionId }
-  | { type: "document_toggle"; documentId: string; completed: boolean }
-  | { type: "inquiry_channel"; channel: "phone" | "online" | "visit" }
-  | { type: "consultation_answer"; text: string };
+  | { type: "document_toggle"; documentId: string; completed: boolean };
 
 export type FlowActionId =
   | "primary"
   | "restart"
   | "documents"
-  | "inquiry"
   | "dashboard"
   | "submitted"
   | "edit_understanding";

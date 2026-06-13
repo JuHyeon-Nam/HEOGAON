@@ -1271,6 +1271,7 @@
       .summary-review-title-row {
         gap: 8px;
         margin-bottom: 8px;
+        align-items: center;
       }
 
       .summary-review-title-row svg {
@@ -1281,6 +1282,11 @@
       .summary-review-title {
         font-size: 16px;
         font-weight: 790;
+      }
+
+      .summary-review-title-row .summary-review-title {
+        margin-bottom: 0;
+        line-height: 1.24;
       }
 
       .building-ledger-summary {

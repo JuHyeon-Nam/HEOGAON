@@ -88,7 +88,7 @@ function QuestionOptions({
             key={option.id}
             onClick={() => toggle(option)}
           >
-            <span className="option-icon" aria-hidden="true"><Icon name={iconForOption(option.id)} /></span>
+            <span className="option-icon" aria-hidden="true"><Icon name={iconForOption(option.id, view.field)} /></span>
             <span className="option-main">
               <span className="option-title">{option.title}</span>
             </span>

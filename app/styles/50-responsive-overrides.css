@@ -305,6 +305,15 @@
         scroll-padding-bottom: 118px;
       }
 
+      .app[data-question-type="documents"] .bottom-bar {
+        z-index: 40;
+      }
+
+      .app[data-question-type="documents"] .document-timeline-item,
+      .app[data-question-type="documents"] .document-prep-check {
+        z-index: 1;
+      }
+
       .app[data-question-type="documents"] .document-prep {
         gap: 17px;
       }
@@ -1365,6 +1374,48 @@
 
       .document-prep {
         gap: 15px;
+      }
+
+      .document-track-list {
+        gap: 22px;
+      }
+
+      .document-track-group {
+        gap: 12px;
+        padding-top: 18px;
+      }
+
+      .document-track-head {
+        gap: 6px;
+        margin: 0 0 4px;
+        padding: 13px 14px 13px 15px;
+        border: 1px solid #dfe8f5;
+        border-left: 4px solid var(--primary);
+        border-radius: 15px;
+        background: linear-gradient(180deg, #fbfdff 0%, #f4f8ff 100%);
+        box-shadow: 0 3px 10px rgba(15, 31, 53, 0.03);
+      }
+
+      .document-track-step {
+        padding: 4px 9px;
+        border-radius: 999px;
+        background: #e8f1ff;
+        font-size: 11.5px;
+        font-weight: 830;
+      }
+
+      .document-track-title {
+        color: var(--text);
+        font-size: 17px;
+        font-weight: 850;
+        line-height: 1.25;
+      }
+
+      .document-track-desc {
+        color: #66758a;
+        font-size: 13px;
+        font-weight: 660;
+        line-height: 1.45;
       }
 
       .document-prep-overview {

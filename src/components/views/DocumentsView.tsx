@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { useEffect, useMemo, useRef, type CSSProperties } from "react";
 import { Icon } from "@/components/common/Icon";
 import type { DocumentItem, DocumentsView as DocumentsViewModel } from "@/types/flow";
 
@@ -29,6 +29,26 @@ export function DocumentsView({
     return !completed && !locked;
   })?.id;
   const activeBlockingTitles = activeDocument ? blockingTitlesFor(activeDocument, completedDocumentIds, titleById) : [];
+  const completedKey = useMemo(() => [...completedDocumentIds].sort().join("|"), [completedDocumentIds]);
+  const didMountRef = useRef(false);
+  const previousCompletedKeyRef = useRef(completedKey);
+
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      previousCompletedKeyRef.current = completedKey;
+      return;
+    }
+
+    if (previousCompletedKeyRef.current === completedKey) return;
+    previousCompletedKeyRef.current = completedKey;
+    if (!firstCurrentId) return;
+
+    const target = document.querySelector<HTMLElement>(`[data-document-id="${CSS.escape(firstCurrentId)}"]`);
+    window.setTimeout(() => {
+      target?.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+    }, 80);
+  }, [completedKey, firstCurrentId]);
 
   return (
     <>
@@ -68,7 +88,7 @@ export function DocumentsView({
                       const current = document.id === firstCurrentId;
                       const stateClass = completed ? " is-done" : current ? " is-current" : locked ? " is-locked" : "";
                       return (
-                        <li className={`document-timeline-item${stateClass}`} key={document.id}>
+                        <li className={`document-timeline-item${stateClass}`} data-document-id={document.id} key={document.id}>
                           <span className="document-timeline-rail" aria-hidden="true">
                             <span className="document-timeline-marker">
                               {completed ? <Icon name="check" size={14} /> : locked ? <Icon name="lock" size={14} /> : document.priority}
@@ -87,7 +107,7 @@ export function DocumentsView({
                             )}
                           </button>
                           {!locked ? (
-                            <label className="document-prep-check">
+                            <label className={`document-prep-check${completed ? " is-checked" : ""}`}>
                               <input
                                 className="document-prep-check-input"
                                 type="checkbox"

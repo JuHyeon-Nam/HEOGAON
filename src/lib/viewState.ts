@@ -27,7 +27,7 @@ export function progressFor(stage: string) {
   const stages = [
     { key: "intake", label: "정보 수집" },
     { key: "diagnosis", label: "확인 결과" },
-    { key: "documents", label: "서류" },
+    { key: "documents", label: "서류 준비" },
     { key: "dashboard", label: "진행 현황" },
     { key: "submitted", label: "제출 완료" },
   ];

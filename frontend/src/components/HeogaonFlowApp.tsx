@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { DevPanel } from "@/components/dev/DevPanel";
 import { BottomBar } from "@/components/shell/BottomBar";
 import { BrandLogo } from "@/components/shell/BrandLogo";
 import { HistoryPanel } from "@/components/shell/HistoryPanel";
@@ -9,8 +10,9 @@ import { AnalysisLoadingScreen } from "@/components/views/AnalysisLoadingScreen"
 import { FlowView } from "@/components/views/FlowView";
 import { LandingScreen } from "@/components/views/LandingScreen";
 import { getCase, sendTurn, startCase } from "@/lib/api";
+import { createDevEnvelope } from "@/lib/devMocks";
 import { primaryActionState, progressFor } from "@/lib/viewState";
-import type { ApiEnvelope, DocumentItem, FlowActionId, TurnInput } from "@/types/flow";
+import type { ApiEnvelope, DocumentItem, FlowActionId, TurnInput, ViewType } from "@/types/flow";
 
 const MIN_ANALYSIS_LOADING_MS = 950;
 const CASE_STORAGE_KEY = "heogaon:v2:caseId";
@@ -38,6 +40,7 @@ export function HeogaonFlowApp() {
     : null;
   const progress = progressFor(envelope?.caseState.progressStage || "intake");
   const ready = splashPhase === "done";
+  const showDevPanel = process.env.NODE_ENV === "development";
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -141,6 +144,26 @@ export function HeogaonFlowApp() {
     setError("");
   }
 
+  function showDevLanding() {
+    resetCase();
+    setSplashPhase("done");
+  }
+
+  function showDevPreview(type: ViewType) {
+    window.localStorage.removeItem(CASE_STORAGE_KEY);
+    setEnvelope(createDevEnvelope(type));
+    setCaseId(null);
+    setInputText("");
+    setSelectedIds([]);
+    setFreeText("");
+    setConsultationText("");
+    setActiveDocument(null);
+    setHistoryOpen(false);
+    setResetConfirmOpen(false);
+    setError("");
+    setSplashPhase("done");
+  }
+
   function submitPrimary() {
     if (!view || !primary || primary.disabled) return;
 
@@ -228,6 +251,9 @@ export function HeogaonFlowApp() {
         <div className={`splash${splashPhase === "hiding" ? " is-hiding" : ""}`} role="status" aria-label="허가온 시작 화면">
           <BrandLogo />
         </div>
+      ) : null}
+      {showDevPanel ? (
+        <DevPanel currentView={view?.type || "landing"} onLanding={showDevLanding} onPreview={showDevPreview} />
       ) : null}
     </>
   );

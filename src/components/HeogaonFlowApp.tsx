@@ -236,6 +236,7 @@ export function HeogaonFlowApp({ initialDevView }: { initialDevView?: ViewType |
                 freeText={freeText}
                 activeDocument={activeDocument}
                 completedDocumentIds={envelope?.statePatch.completedDocumentIds || []}
+                documents={envelope?.statePatch.documents || []}
                 onSelectIds={setSelectedIds}
                 onFreeText={setFreeText}
                 onUnknown={submitUnknown}
